@@ -372,6 +372,7 @@ body {
   display: flex;
   align-items: center;
   padding: 8px 12px;
+  gap: 12px;
   border-bottom: 1px solid var(--border-subtle);
 }
 .lb-col {
@@ -394,6 +395,7 @@ body {
   display: flex;
   align-items: center;
   padding: 9px 12px;
+  gap: 12px;
   border-bottom: 1px solid var(--border-subtle);
   cursor: pointer;
   transition: all 150ms;
