@@ -838,6 +838,56 @@ body {
 
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
+/* ── Watchlist star ──────────────────────────────────── */
+.lb-star { width: 28px; flex-shrink: 0; text-align: center; }
+.star-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text-tertiary);
+  padding: 2px;
+  line-height: 1;
+  transition: color 150ms, transform 150ms;
+}
+.star-btn:hover { color: var(--amber); transform: scale(1.2); }
+.star-btn.starred { color: var(--amber); }
+.drawer-star { font-size: 20px; margin-left: auto; margin-right: 8px; }
+
+/* ── PnL column ────────────────────────────────────── */
+.lb-pnl { width: 90px; text-align: right; }
+
+/* ── Signal metadata ───────────────────────────────── */
+.signal-meta {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+.signal-meta-item {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-tertiary);
+  background: var(--bg-input);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+}
+.signal-detail-holders,
+.signal-detail-age {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-tertiary);
+  background: var(--bg-input);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Feed gainer dot ───────────────────────────────── */
+.feed-dot.gainer {
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+}
+
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 900px) {
   .signals-panel { display: none; }

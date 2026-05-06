@@ -13,6 +13,22 @@ import AlphaScoreExplainer from './components/AlphaScoreExplainer.jsx';
 import LoadingScreen from './components/LoadingScreen.jsx';
 import Footer from './components/Footer.jsx';
 import OverlapTab from './components/OverlapTab.jsx';
+import WatchlistTab from './components/WatchlistTab.jsx';
+
+const WATCHLIST_KEY = 'alphadesk_watchlist';
+
+function loadWatchlist() {
+  try {
+    const raw = localStorage.getItem(WATCHLIST_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch { return []; }
+}
+
+function saveWatchlist(addresses) {
+  try { localStorage.setItem(WATCHLIST_KEY, JSON.stringify(addresses)); } catch {}
+}
 
 const STORAGE_KEY = 'alphadesk_cache';
 
@@ -25,7 +41,7 @@ function loadCachedData() {
       localStorage.removeItem(STORAGE_KEY);
       return null;
     }
-    return parsed;
+    return Array.isArray(parsed.wallets) && Array.isArray(parsed.signals) && Array.isArray(parsed.feed) ? parsed : null;
   } catch {
     return null;
   }
@@ -38,6 +54,9 @@ const STEPS = [
   'Enriching wallet profiles\u2026',
   'Fetching price data\u2026',
   'Running security checks\u2026',
+  'Fetching wallet PnL\u2026',
+  'Analyzing token metadata\u2026',
+  'Loading top earners\u2026',
   'Computing AlphaScores\u2026',
   'Done!',
 ];
@@ -69,6 +88,17 @@ export default function App() {
   const [meta, setMeta] = useState(cached ? cached.meta : null);
   const [autoRefreshInterval, setAutoRefreshInterval] = useState(null);
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [watchlist, setWatchlist] = useState(() => loadWatchlist());
+
+  const toggleWatchlist = useCallback((address) => {
+    setWatchlist(prev => {
+      const next = prev.includes(address)
+        ? prev.filter(a => a !== address)
+        : [...prev, address];
+      saveWatchlist(next);
+      return next;
+    });
+  }, []);
 
   const dataSource = useMemo(() => {
     if (mode === 'demo') return 'Demo Snapshot';
@@ -196,12 +226,17 @@ export default function App() {
       if (e.key === '2') setActiveTab('feed');
       if (e.key === '3') setActiveTab('signals');
       if (e.key === '4') setActiveTab('overlap');
+      if (e.key === '5') setActiveTab('watchlist');
+      if (e.key === 'w' && !e.metaKey && !e.ctrlKey && selectedWallet) {
+        e.preventDefault();
+        toggleWatchlist(selectedWallet.address);
+      }
       if (e.key === '?' && !e.metaKey) setShowShortcuts(prev => !prev);
       if (e.key === 'Escape') { setShowShortcuts(false); setShowExplainer(false); setSelectedWallet(null); }
     }
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleRefresh, handleModeChange, isLoading]);
+  }, [handleRefresh, handleModeChange, isLoading, toggleWatchlist, selectedWallet]);
 
   return (
     <div className="app">
@@ -235,7 +270,7 @@ export default function App() {
         />
         <div className="main-panel">
           <div className="tab-bar">
-            {['leaderboard', 'feed', 'signals', 'overlap'].map(tab => (
+            {['leaderboard', 'feed', 'signals', 'overlap', 'watchlist'].map(tab => (
               <button
                 key={tab}
                 className={`tab-btn ${activeTab === tab ? 'active' : ''}`}
@@ -258,6 +293,8 @@ export default function App() {
                 onSelectWallet={setSelectedWallet}
                 copiedAddress={copiedAddress}
                 setCopiedAddress={setCopiedAddress}
+                watchlist={watchlist}
+                onToggleWatchlist={toggleWatchlist}
               />
             )}
             {activeTab === 'feed' && (
@@ -273,6 +310,16 @@ export default function App() {
             {activeTab === 'overlap' && (
               <OverlapTab wallets={wallets} onSelectWallet={setSelectedWallet} />
             )}
+            {activeTab === 'watchlist' && (
+              <WatchlistTab
+                wallets={wallets}
+                watchlist={watchlist}
+                onToggleWatchlist={toggleWatchlist}
+                onSelectWallet={setSelectedWallet}
+                copiedAddress={copiedAddress}
+                setCopiedAddress={setCopiedAddress}
+              />
+            )}
           </div>
         </div>
         {selectedWallet && (
@@ -282,6 +329,8 @@ export default function App() {
             feed={feed}
             copiedAddress={copiedAddress}
             setCopiedAddress={setCopiedAddress}
+            watchlist={watchlist}
+            onToggleWatchlist={toggleWatchlist}
           />
         )}
       </div>
@@ -305,6 +354,8 @@ export default function App() {
                   ['2', 'Feed tab'],
                   ['3', 'Signals tab'],
                   ['4', 'Overlap tab'],
+                  ['5', 'Watchlist tab'],
+                  ['W', 'Toggle watchlist'],
                   ['?', 'Toggle shortcuts'],
                   ['Esc', 'Close panels'],
                 ].map(([key, desc]) => (
