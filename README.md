@@ -129,7 +129,7 @@ The Vercel serverless proxy (`api/birdeye.js`) implements:
 ## Quick Start
 
 ```bash
-git clone https://github.com/savage-debug3/AlphaDesk.git
+git clone https://github.com/savage27z/AlphaDesk.git
 cd AlphaDesk
 npm install
 npm run dev
