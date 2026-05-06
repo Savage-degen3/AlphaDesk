@@ -8,7 +8,7 @@ export default function Footer() {
         </a>
       </span>
       <span className="footer-sep">&middot;</span>
-      <a href="https://github.com/stevve-stack3/AlphaDesk" target="_blank" rel="noopener noreferrer" className="footer-link">
+      <a href="https://github.com/Savage27z/AlphaDesk" target="_blank" rel="noopener noreferrer" className="footer-link">
         GitHub
       </a>
       <span className="footer-sep">&middot;</span>
