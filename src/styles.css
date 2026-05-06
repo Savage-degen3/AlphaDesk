@@ -373,6 +373,7 @@ body {
   align-items: center;
   padding: 8px 12px;
   border-bottom: 1px solid var(--border-subtle);
+  justify-content: space-between;
 }
 .lb-col {
   font-size: 10px;
@@ -385,7 +386,7 @@ body {
 .lb-wallet { width: 110px; }
 .lb-score { width: 150px; display: flex; align-items: center; gap: 8px; }
 .lb-tokens { width: 60px; text-align: center; }
-.lb-portfolio { flex: 1; text-align: left; }
+.lb-portfolio { width: 100px; text-align: right; }
 .lb-active { width: 90px; text-align: right; }
 .lb-tier { width: 72px; text-align: right; }
 .lb-mono { font-family: var(--font-mono); }
@@ -395,6 +396,7 @@ body {
   align-items: center;
   padding: 9px 12px;
   border-bottom: 1px solid var(--border-subtle);
+  justify-content: space-between;
   cursor: pointer;
   transition: all 150ms;
   border-left: 3px solid transparent;
